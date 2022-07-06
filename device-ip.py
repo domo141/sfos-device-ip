@@ -8,7 +8,7 @@
 #	    All rights reserved
 #
 # Created: Mon 06 Jun 2022 23:28:40 EEST too
-# Last modified: Sun 26 Jun 2022 12:39:04 +0300 too
+# Last modified: Mon 13 Jun 2022 21:58:33 +0300 too
 
 from subprocess import Popen, PIPE
 from re import compile as re_compile
@@ -30,7 +30,6 @@ def device_ip():
                 iface = None
                 pass
             if ether is not None:
-                ether = '84:c7:ea:12:34:56'
                 text = f'{text}<i>{ether}</i><br/>\n'
                 ether = None
                 pass
@@ -38,10 +37,7 @@ def device_ip():
                 text = f'{text}<u>{m.group(2)}</u><br/>\n'
                 ipv4s.append(m.group(2))
             else:
-                t = m.group(2)
-                if 'ff:fe' in t:
-                    t = t[:-10] + '12:3456/64'
-                text = f'{text}{t}<br/>\n'
+                text = f'{text}{m.group(2)}<br/>\n'
                 pass
             continue
         m = iface_up_re.search(line)
