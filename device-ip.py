@@ -8,20 +8,23 @@
 #	    All rights reserved
 #
 # Created: Mon 06 Jun 2022 23:28:40 EEST too
-# Last modified: Mon 13 Jun 2022 21:58:33 +0300 too
+# Last modified: Sat 04 Feb 2023 22:58:59 +0200 too
 
 from subprocess import Popen, PIPE
 from re import compile as re_compile
 from datetime import datetime
+from os import access, X_OK
 
 iface_up_re = re_compile("^\d+:\s+(\S+?):.*[<,]UP[,>]")
 ether_re = re_compile("^\s+link/ether\s+(\S+)")
 inet_re = re_compile("^\s+inet(6?)\s+(\S+)")
 
+ip_cmd = '/sbin/ip' if access('/sbin/ip', X_OK) else '/usr/sbin/ip'
+
 def device_ip():
     iface, ether, text = None, None, ""
     ipv4s = []
-    for line in Popen(('/sbin/ip', 'addr'), stdout=PIPE, text=True).stdout:
+    for line in Popen((ip_cmd, 'addr'), stdout=PIPE, text=True).stdout:
         m = inet_re.search(line)
         if m:
             if iface is not None:
@@ -54,15 +57,14 @@ def device_ip():
 
 
 def device_ip_call():
-    import pyotherside
     text, ipv4s = device_ip()
-    pyotherside.send('update', text, '\n'.join(ipv4s))
+    return text, '\n'.join(ipv4s)
     pass
 
 
 def main():
     text, ipv4s = device_ip()
-    #print(text, '\n'.join(ipv4s))
+    #print('---\n', text, '\n---\n'.join(ipv4s), '---\n')
     print(text)
     pass
 

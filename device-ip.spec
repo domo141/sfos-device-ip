@@ -11,7 +11,7 @@
 
 Name:        device-ip
 Summary:     Device IP (ip4, ip6 (and mac)) information
-Version:     1.0
+Version:     1.1
 Release:     1
 License:     BSD-2-Clause
 Requires:    sailfishsilica-qt5 >= 0.10.9
@@ -26,7 +26,7 @@ Show network addresses of the interfaces that are UP.
 
 
 %prep
-cat "$0"
+sed '$q; s/^/: /' "$0"
 #env
 #id
 #%setup -q -n %{name}-%{version}
@@ -53,7 +53,7 @@ mkdir %{buildroot}%{_datadir}/%{name}/ \
       %{buildroot}%{_datadir}/icons/hicolor/ \
       %{buildroot}%{_datadir}/icons/hicolor/86x86/ \
       %{buildroot}%{_datadir}/icons/hicolor/86x86/apps/
-install -m 755 device-ip.qml device-ip.py %{buildroot}%{_datadir}/%{name}/qml/.
+install -m 644 device-ip.qml device-ip.py %{buildroot}%{_datadir}/%{name}/qml/.
 install -m 644 device-ip.png \
         %{buildroot}%{_datadir}/icons/hicolor/86x86/apps/.
 install -m 644 device-ip.desktop %{buildroot}%{_datadir}/applications/.

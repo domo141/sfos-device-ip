@@ -9,7 +9,7 @@
 #
 # Created: Mon 02 Aug 2021 18:04:22 EEST too (for pkexec-reboot)
 # Created: Sat 11 Jun 2022 17:12:54 +0300 too
-# Last modified: Mon 20 Jun 2022 23:04:53 +0300 too
+# Last modified: Sat 04 Feb 2023 23:35:09 +0200 too
 
 # Note: Started with Makefile, but got "make: not found" (minimal deps FTW).
 #       I would change emphasis of this script elsewhere but naming is hard...
@@ -118,14 +118,9 @@ devdev_cmd_sshp ()      # create persistent ssh connection...
 	z=${z%)*}; z=${z#*\(}
 	test -e "$z" && rm "$z"
 	so=-oControlPath=$z\ -M\ -oControlPersist=$3
-	case $4 in @*) userathost=${4#?}
-		;; *@*) userathost=$4
-		;; *) userathost=nemo@$4
-	esac
-	shift 4
-	echo ssh $so $userathost "$@" >&2
-	TERM=xterm \
-	exec ssh $so $userathost "$@"
+	shift 3
+	echo ssh $so "$@" >&2
+	exec ssh $so "$@"
 	exit not reached
 }
 

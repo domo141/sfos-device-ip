@@ -1,8 +1,8 @@
-// -*- css -*-
+// -*- javascript -*-
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import io.thp.pyotherside 1.2 // for executing process
+import io.thp.pyotherside 1.2
 
 // SPDX-License-Identifier: BSD 2-Clause "Simplified" License
 
@@ -49,22 +49,21 @@ ApplicationWindow {
                 //textFormat: Text.styledText
                 //fontSizeMode: Text.HorizontalWidth // does not wrok here...
                 font.pixelSize: 40 // FIXME
-                //Component.onCompleted: { python.device_ip_call() }
             }
             Python {
                 id: python
                 Component.onCompleted: {
                     //console.log("where does this go ?")
                     addImportPath(Qt.resolvedUrl('.'))
-                    setHandler('update', function(text, ipv4s) {
-                        texxt.text = text
-                        page.ipv4s = ipv4s
-                    })
                     importNames('device-ip', ['device_ip_call'], function() {})
                     python.device_ip_call()
                 }
                 function device_ip_call() {
-                    call('device_ip_call', [], function() {})
+                    call('device_ip_call', [],
+                         function(result) {
+                             texxt.text = result[0]
+                             page.ipv4s = result[1]
+                         })
                 }
             }
         }
