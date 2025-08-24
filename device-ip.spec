@@ -1,18 +1,8 @@
-#
-# There is probably a proper way (one-command-build after git clone)
-# but I could not find a way to do it. The following worked for me...
-
-# podman run --pull=never --rm -it --privileged -v $PWD:$PWD -w $PWD \
-#            -h podman-container sailfishos-platform-sdk-aarch64:latest sudo \
-#            rpmbuild --build-in-place -D "%_rpmdir $PWD" -bb *.spec
-
-# Used podman pull docker.io/coderus/sailfishos-platform-sdk-aarch64
-# to get that particular container image (2021-09-02). XXX date
 
 Name:        device-ip
 Summary:     Device IP (ip4, ip6 (and mac)) information
 Version:     1.1
-Release:     1
+Release:     2
 License:     BSD-2-Clause
 Requires:    sailfishsilica-qt5 >= 0.10.9
 Requires:    pyotherside-qml-plugin-python3-qt5

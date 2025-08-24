@@ -4,8 +4,7 @@ Device IP (sfos)
 
 Show network addresses of the interfaces that are UP.
 
-(and the time peeked -- click the title 'Device IP'
- to update)
+(and the time queried -- tap the title 'Device IP' to update)
 
 Runs on (mobile) devices running Sailfish OS.
 
@@ -24,10 +23,12 @@ binary blob to be available in code repository.
 Install
 -------
 
-Easiest is to install *.rpm* from public repositories.
-If not available or such is considered as a security
-risk (installer did things before one had chance to
-examine installed content), *.rpm* can be self-built
-using the .spec file provided. I am not sure what is
-the proper way, so I just use `./devdev.sh rpmbuild`
-to do it.
+It is easiest to install the *.rpm* from public repositories.
+If it is not available or such is considered a security
+risk (installer did things before one had chance to examine
+installed content), the *.rpm* can be self-built easily:
+
+    $ ./mk rpm
+
+Build needs perl(1) and md5, sha1 and sha256 perl Digest::
+modules.

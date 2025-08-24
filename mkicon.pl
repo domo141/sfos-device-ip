@@ -9,14 +9,11 @@
 #
 # Created: Sun 15 Aug 2021 15:17:41 EEST too  (for pwpingen)
 # Created: Fri 10 Jun 2022 00:48:21 EEST too
-# Last modified: Mon 13 Jun 2022 21:23:50 +0300 too
+# Last modified: Sat 13 Sep 2025 16:27:01 +0300 too
 
 use 5.8.1;
 use strict;
 use warnings;
-
-$ENV{'PATH'} = '/no//path/';
-
 
 # w/ constant, same ref is always returned. sub c () { [ ... ] } returns new...
 use constant
@@ -151,4 +148,22 @@ foreach (reverse @pa) {
 close O or die;
 
 rename 'icon344.wip', 'icon344.bmp';
-print "Wrote 'icon344.bmp'\n";
+print "Wrote 'icon344.bmp' - continuing to create optimized 86x86 image...\n";
+
+exec qw/sh -c/, <<'EOF'
+
+set -euf
+die () { printf '%s\n' "$@"; exit 1; } >&2
+x () { printf '+ %s\n' "$*" >&2; "$@"; }
+x_exec () { printf '+ %s\n' "$*" >&2; exec "$@"; }
+
+for c in convert optipng
+do command -v $c >/dev/null || die "'$c': command not found"
+done
+
+x convert icon344.bmp -scale 86x86 icon86-wip.png
+#x pngquant -f -o "$ofile.wip" "$ifile"
+x optipng --strip all -o9 icon86-wip.png
+x mv icon86-wip.png icon86.png
+x_exec ls -l icon86.png
+EOF
