@@ -2,7 +2,8 @@
 Device IP (sfos)
 ================
 
-Show network addresses of the interfaces that are UP.
+Show network addresses (and default routes) of the interfaces
+that are UP.
 
 (and the time queried -- tap the title 'Device IP' to update)
 
@@ -32,3 +33,7 @@ installed content), the *.rpm* can be self-built easily:
 
 Build needs perl(1) and md5, sha1 and sha256 perl Digest::
 modules.
+
+(Note: with tree 5b4222f12f60 and committer-date 1757869028
+       md5sum of the built rpm device-ip-1.2-1.noarch.rpm
+       is expected to be 2a6dcc019b9188483e909a600e67acc9)

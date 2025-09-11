@@ -8,39 +8,41 @@
 #	    All rights reserved
 #
 # Created: Mon 06 Jun 2022 23:28:40 EEST too
-# Last modified: Sat 04 Feb 2023 22:58:59 +0200 too
+# Last modified: Thu 11 Sep 2025 21:02:41 +0300 too
 
 from subprocess import Popen, PIPE
 from re import compile as re_compile
 from datetime import datetime
 from os import access, X_OK
 
-iface_up_re = re_compile("^\d+:\s+(\S+?):.*[<,]UP[,>]")
-ether_re = re_compile("^\s+link/ether\s+(\S+)")
-inet_re = re_compile("^\s+inet(6?)\s+(\S+)")
+iface_up_re = re_compile(r"^\d+:\s+(\S+?):.*[<,]UP[,>]")
+ether_re = re_compile(r"^\s+link/ether\s+(\S+)")
+inet_re = re_compile(r"^\s+inet(6?)\s+(\S+)")
+
+route_re = re_compile(r"^default\s+via\s+(\S+).*?\sdev\s+(\S+)")
 
 ip_cmd = '/sbin/ip' if access('/sbin/ip', X_OK) else '/usr/sbin/ip'
 
 def device_ip():
-    iface, ether, text = None, None, ""
+    iface, ether, text = None, None, []
     ipv4s = []
     for line in Popen((ip_cmd, 'addr'), stdout=PIPE, text=True).stdout:
         m = inet_re.search(line)
         if m:
             if iface is not None:
-                if text != "": text = f'{text}<br/>'
-                text = f'{text}<b>{iface}</b><br/>\n'
+                if text: text.append('<br/>')
+                text.append(f'<b>{iface}</b><br/>')
                 iface = None
                 pass
             if ether is not None:
-                text = f'{text}<i>{ether}</i><br/>\n'
+                text.append(f'<i>{ether}</i><br/>')
                 ether = None
                 pass
             if m.group(1) != '6':
-                text = f'{text}<u>{m.group(2)}</u><br/>\n'
+                text.append(f'<u>{m.group(2)}</u><br/>')
                 ipv4s.append(m.group(2))
             else:
-                text = f'{text}{m.group(2)}<br/>\n'
+                text.append(f'{m.group(2)}<br/>')
                 pass
             continue
         m = iface_up_re.search(line)
@@ -51,8 +53,20 @@ def device_ip():
         m = ether_re.search(line)
         if m: ether = m.group(1)
         pass
+
+    text.append(f"<br/><br/>\n<b>default routes:</b><br/>'''''''''''''''<br/>")
+    for line in Popen((ip_cmd, 'route', 'show', 'table', 'all'),
+                      stdout=PIPE, text=True).stdout:
+        m = route_re.search(line)
+        if m:
+            text.append(f'{m.group(2)}: {m.group(1)}<br/>')
+            pass
+        pass
+
     now = datetime.now()
-    text = f'{text}<br/>Device IP @ {now.strftime("%H:%M:%S")}\n'
+    text.append(f'<br/>Device IP @ {now.strftime("%H:%M:%S")}')
+
+    text = "\n".join(text)
     return text, ipv4s
 
 

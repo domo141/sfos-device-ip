@@ -1,8 +1,8 @@
 
 Name:        device-ip
-Summary:     Device IP (ip4, ip6 (and mac)) information
-Version:     1.1
-Release:     2
+Summary:     Device IP (ip4, ip6 (and mac)) and default route information
+Version:     1.2
+Release:     1
 License:     BSD-2-Clause
 Requires:    sailfishsilica-qt5 >= 0.10.9
 Requires:    pyotherside-qml-plugin-python3-qt5
@@ -12,7 +12,8 @@ BuildRequires:  desktop-file-utils
 
 
 %description
-Show network addresses of the interfaces that are UP.
+Show network addresses (and default routes) of the interfaces
+that are UP.
 
 
 %prep
